@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanPulse AI - Smart Civic Analytics</title>
+  <link rel="preconnect" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  <link rel="preconnect" href="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="light">
+  
+  <!-- THEME TOGGLE -->
+  <button id="themeToggle" class="theme-btn" title="Toggle Dark Mode">🌙</button>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <div class="logo">🌆</div>
+      <h1>UrbanPulse AI</h1>
+      <p class="tagline">Smart Civic Analytics Dashboard</p>
+      
+      <div class="btn-group">
+        <a href="#report" class="btn btn-primary scroll-link">🚀 Report Issue</a>
+        <a href="#dashboard" class="btn btn-secondary scroll-link">📊 Dashboard</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container" id="main-content">
+    
+    <!-- REPORT FORM -->
+    <section id="report" class="fade-in">
+      <div class="card">
+        <h2>📝 Report New Issue</h2>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Issue Category</label>
+            <select id="category">
+              <option value="">Select Issue Type</option>
+              <option value="Garbage">🗑️ Garbage Collection</option>
+              <option value="Water Leakage">💧 Water Leakage</option>
+              <option value="Road Damage">🛣️ Road Damage</option>
+              <option value="Dog Bite">🐕 Dog Bite</option>
+              <option value="Street Light">💡 Street Light</option>
+              <option value="Drainage">🌊 Drainage Issue</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="state">State</label>
+            <select id="state">
+              <option value="">Select State</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="district">District</label>
+            <input id="district" type="text" placeholder="Enter district name">
+          </div>
+          <div class="form-group">
+            <label for="severity">Severity</label>
+            <select id="severity">
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+              <option value="Critical">Critical</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="problem">Problem Description</label>
+          <textarea id="problem" rows="4" placeholder="Describe the issue in detail..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="imageInput">📷 Attach Photo (Optional)</label>
+            <input type="file" id="imageInput" accept="image/*">
+            <img id="preview" class="image-preview">
+          </div>
+          <div class="form-group location-group">
+            <label>Get Current Location</label>
+            <button id="getLocationBtn" class="btn btn-secondary">📍 Detect Location</button>
+            <div id="locationDisplay" class="location-info"></div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button id="generateBtn" class="btn btn-primary" disabled>🚀 Generate Report</button>
+          <button id="downloadBtn" class="btn btn-secondary" disabled>📄 Download PDF</button>
+        </div>
+      </div>
+
+      <!-- MAP -->
+      <div id="map"></div>
+    </section>
+
+    <!-- OUTPUT -->
+    <div class="output-card fade-in">
+      <h3>📋 Report Status</h3>
+      <pre id="output">Ready to generate your first report...</pre>
+    </div>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="fade-in">
+      <h2>📊 Dashboard</h2>
+      
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number" data-target="127">0</div>
+          <div class="stat-label">Total Reports</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-target="34">0</div>
+          <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-target="56">0</div>
+          <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" data-target="37">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+
+      <!-- REPORTS LIST -->
+      <div class="section-header">
+        <h3>📋 Recent Reports</h3>
+        <input type="text" id="searchReports" placeholder="🔍 Search reports...">
+      </div>
+      <div id="reportList" class="report-grid"></div>
+    </section>
+
+    <!-- ADMIN PANEL -->
+    <section class="admin-panel fade-in">
+      <h3>🛠️ Admin Panel</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="searchToken">Report Token</label>
+          <input id="searchToken" type="text" placeholder="Enter report token">
+        </div>
+        <div class="form-group">
+          <label for="statusUpdate">Update Status</label>
+          <select id="statusUpdate">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+      </div>
+      <button id="updateStatusBtn" class="btn btn-primary">Update Status</button>
+    </section>
+
+  </main>
+
+  <!-- SCRIPTS (Optimized Loading) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
